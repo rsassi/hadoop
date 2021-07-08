@@ -29,6 +29,7 @@
 #include <stdio.h> 
 #include <string.h> 
 
+
 static struct htable *gClassRefHTable = NULL;
 
 /** The Native return types that methods could return */
@@ -43,6 +44,9 @@ static struct htable *gClassRefHTable = NULL;
 #define JLONG         'J'
 #define JFLOAT        'F'
 #define JDOUBLE       'D'
+
+//TOO:: review the decision many warning)
+#define ssize_t       int
 
 
 /**
@@ -380,7 +384,7 @@ static ssize_t wildcard_expandPath(const char* path, char* expanded)
         // can open dir so try to match with all *.jar and *.JAR entries
 
 #ifdef _LIBHDFS_JNI_HELPER_DEBUGGING_ON_
-        printf("wildcard_expandPath: %s\n", path);
+        printf("wildcard_expandPath : %s\n", path);
 #endif
 
         errno = 0;
@@ -417,7 +421,7 @@ static ssize_t wildcard_expandPath(const char* path, char* expanded)
                     dest++;
 
 #ifdef _LIBHDFS_JNI_HELPER_DEBUGGING_ON_
-                    printf("wildcard_expandPath:\t%s\t:\t%s\n",
+                    printf("wildcard_expandPath :\t%s\t:\t%s\n",
                       filename, expanded);
 #endif
                 }
@@ -425,18 +429,18 @@ static ssize_t wildcard_expandPath(const char* path, char* expanded)
         }
 
         if (errno != 0) {
-            fprintf(stderr, "wildcard_expandPath: on readdir %s: %s\n",
+            fprintf(stderr, "wildcard_expandPath : on readdir %s: %s\n",
               path, strerror(errno));
             length = -1;
         }
 
         if (closedir(dir) != 0) {
-            fprintf(stderr, "wildcard_expandPath: on closedir %s: %s\n",
+            fprintf(stderr, "wildcard_expandPath : on closedir %s: %s\n",
                     path, strerror(errno));
         }
     } else if ((errno != EACCES) && (errno != ENOENT) && (errno != ENOTDIR)) {
         // can not opendir due to an error we can not handle
-        fprintf(stderr, "wildcard_expandPath: on opendir %s: %s\n", path,
+        fprintf(stderr, "wildcard_expandPath : on opendir %s: %s\n", path,
                 strerror(errno));
         length = -1;
     }
@@ -446,7 +450,7 @@ static ssize_t wildcard_expandPath(const char* path, char* expanded)
         // we did not find any file that matches *.jar or *.JAR
 
 #ifdef _LIBHDFS_JNI_HELPER_DEBUGGING_ON_
-        fprintf(stderr, "wildcard_expandPath: can not expand %.*s*: %s\n",
+        fprintf(stderr, "wildcard_expandPath : can not expand %.*s*: %s\n",
                 (int)(pathLength-1), path, strerror(errno));
 #endif
 
@@ -507,9 +511,9 @@ static ssize_t getClassPath_helper(const char *classpath, char* expandedClasspat
         if ((tokenlen > 1) &&
           (cp_token[tokenlen-1] == '*') && (cp_token[tokenlen-2] == '/')) {
             // replace the '*' with '.' so that we don't have to allocate another
-            // string for passing to opendir() in wildcard_expandPath()
+            // string for passing to opendir() in wildcard_expandPath ()
             cp_token[tokenlen-1] = '.';
-            retval = wildcard_expandPath(cp_token, expandedCP_curr);
+            retval = wildcard_expandPath (cp_token, expandedCP_curr);
             if (retval < 0) {
                 free(classpath_dup);
                 return -1;

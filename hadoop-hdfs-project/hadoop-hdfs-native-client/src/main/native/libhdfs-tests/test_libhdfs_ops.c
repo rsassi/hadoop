@@ -73,6 +73,9 @@ int main(int argc, char **argv) {
     const char *tuser = "nobody";
     const char *appendPath = "/tmp/appends";
     const char *userPath = "/tmp/usertestfile.txt";
+	
+    // Test pread midway through the file rather than at the beginning
+    const char *fileContentsChunk = "World!";
 
     char buffer[32], buffer2[256], rdbuffer[32];
     tSize num_written_bytes, num_read_bytes, num_pread_bytes;
@@ -291,7 +294,7 @@ int main(int argc, char **argv) {
         }
 
         // Test pread midway through the file rather than at the beginning
-        const char *fileContentsChunk = "World!";
+        /*constchar *fileContentsChunk = "World!";*/ 
         num_pread_bytes = hdfsPread(fs, preadFile, 7, (void*)buffer, sizeof(buffer));
         if (strncmp(fileContentsChunk, buffer, strlen(fileContentsChunk)) != 0) {
             fprintf(stderr, "Failed to pread (direct). Expected %s but got %s (%d bytes)\n",

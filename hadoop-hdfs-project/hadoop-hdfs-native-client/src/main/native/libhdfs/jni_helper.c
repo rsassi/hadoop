@@ -871,4 +871,3 @@ jthrowable fetchEnumInstance(JNIEnv *env, const char *className,
     *out = jEnum;
     return NULL;
 }
-

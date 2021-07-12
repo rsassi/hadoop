@@ -75,7 +75,15 @@
           <artifactId>paranamer-ant</artifactId>
           <groupId>com.thoughtworks.paranamer</groupId>
         </exclusion>
+        <exclusion>
+          <groupId>com.thoughtworks.paranamer</groupId>
+          <artifactId>paranamer</artifactId>
+        </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.thoughtworks.paranamer</groupId>
+      <artifactId>paranamer</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>

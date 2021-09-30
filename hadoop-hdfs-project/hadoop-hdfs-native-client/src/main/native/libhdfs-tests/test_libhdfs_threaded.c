@@ -149,6 +149,12 @@ static int doTestHdfsOperations(struct tlhThreadInfo *ti, hdfsFS fs,
     hdfsFileInfo *fileInfo;
     struct hdfsReadStatistics *readStats = NULL;
     struct hdfsHedgedReadMetrics *hedgedMetrics = NULL;
+	char invalid_path[] = "/some_invalid/path";
+	hdfsFileInfo * dirList;
+	char listDirTest[PATH_MAX];
+	int nFile;
+	char filename[PATH_MAX];
+	hdfsFS fs2 = NULL;
 
     if (hdfsExists(fs, paths->prefix) == 0) {
         EXPECT_ZERO(hdfsDelete(fs, paths->prefix, 1));
@@ -160,7 +166,6 @@ static int doTestHdfsOperations(struct tlhThreadInfo *ti, hdfsFS fs,
     /* There is no such directory.
      * Check that errno is set to ENOENT
      */
-    char invalid_path[] = "/some_invalid/path";
     EXPECT_NULL_WITH_ERRNO(hdfsListDirectory(fs, invalid_path, &numEntries), ENOENT);
 
     /* There should be no entry in the directory. */
@@ -207,7 +212,7 @@ static int doTestHdfsOperations(struct tlhThreadInfo *ti, hdfsFS fs,
     EXPECT_ZERO(doTestGetDefaultBlockSize(fs, paths->file1));
 
     /* There should be 1 entry in the directory. */
-    hdfsFileInfo * dirList = hdfsListDirectory(fs, paths->prefix, &numEntries);
+    dirList = hdfsListDirectory(fs, paths->prefix, &numEntries);
     EXPECT_NONNULL(dirList);
     if (numEntries != 1) {
         fprintf(stderr, "hdfsListDirectory set numEntries to "
@@ -216,13 +221,11 @@ static int doTestHdfsOperations(struct tlhThreadInfo *ti, hdfsFS fs,
     hdfsFreeFileInfo(dirList, numEntries);
 
     /* Create many files for ListDirectory to page through */
-    char listDirTest[PATH_MAX];
     strcpy(listDirTest, paths->prefix);
     strcat(listDirTest, "/for_list_test/");
     EXPECT_ZERO(hdfsCreateDirectory(fs, listDirTest));
-    int nFile;
+
     for (nFile = 0; nFile < 10000; nFile++) {
-      char filename[PATH_MAX];
       snprintf(filename, PATH_MAX, "%s/many_files_%d", listDirTest, nFile);
       file = hdfsOpenFile(fs, filename, O_WRONLY, 0, 0, 0);
       EXPECT_NONNULL(file);
@@ -314,7 +317,7 @@ static int doTestHdfsOperations(struct tlhThreadInfo *ti, hdfsFS fs,
     //Test case: No permission to access parent directory
     EXPECT_ZERO(hdfsChmod(fs, paths->prefix, 0));
     //reconnect as user "SomeGuy" and verify that we get permission errors
-    hdfsFS fs2 = NULL;
+
     EXPECT_ZERO(hdfsSingleNameNodeConnect(tlhCluster, &fs2, "SomeGuy"));
     EXPECT_NULL_WITH_ERRNO(hdfsGetPathInfo(fs2, paths->file2), EACCES);
     EXPECT_ZERO(hdfsDisconnect(fs2));

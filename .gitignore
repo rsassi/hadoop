@@ -18,6 +18,7 @@ target
 build
 dependency-reduced-pom.xml
 make-build-debug
+**/pom.xml.versionsBackup
 
 # Filesystem contract test options and credentials
 auth-keys.xml

@@ -62,6 +62,7 @@ public class TestSecureRegistry extends AbstractSecureRegistryTest {
   * this is a cut and paste of some of the ZK internal code that was
    * failing on windows and swallowing its exceptions
    */
+  //comment this test to upgrade zookeeper to 3.5.7
   @Test
   public void testLowlevelZKSaslLogin() throws Throwable {
     RegistrySecurity.bindZKToServerJAASContext(ZOOKEEPER_SERVER_CONTEXT);

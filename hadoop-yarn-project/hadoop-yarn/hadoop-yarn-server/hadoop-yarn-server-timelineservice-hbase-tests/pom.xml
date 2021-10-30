@@ -160,6 +160,11 @@
       <version>${hbase-compatible-guava.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.sun.jersey</groupId>

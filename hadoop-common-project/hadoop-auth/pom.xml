@@ -215,7 +215,7 @@
           </execution>
           <execution>
             <id>prepare-test-jar</id>
-            <phase>prepare-package</phase>
+            <phase>test-compile</phase>
             <goals>
               <goal>test-jar</goal>
             </goals>
